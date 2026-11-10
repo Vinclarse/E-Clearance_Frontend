@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import StudentDashboard from './pages/StudentDashboard.jsx'
 import arrowRight from './assets/arrow-right.svg'
 import dashboardIllustration from './assets/clearance-dashboard-illustration.svg'
 import featureMobile from './assets/feature-mobile-friendly.svg'
@@ -136,6 +137,9 @@ function LoginPage() {
           <a className="button" href="/">
             Return to the Homepage <span aria-hidden="true">→</span>
           </a>
+          <a className="button button-light" href="/dashboard">
+            Open the Student Dashboard
+          </a>
         </section>
       </main>
     </div>
@@ -187,6 +191,13 @@ function OfficeRow({ image, name, status, statusClass, statusImage }) {
 
 function HomePage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [showSignedOutMessage, setShowSignedOutMessage] = useState(
+    () => sessionStorage.getItem('signed-out') === 'true',
+  )
+
+  useEffect(() => {
+    if (showSignedOutMessage) sessionStorage.removeItem('signed-out')
+  }, [showSignedOutMessage])
 
   return (
     <>
@@ -230,6 +241,16 @@ function HomePage() {
       </header>
 
       <main>
+        {showSignedOutMessage && (
+          <div className="container">
+            <div className="signed-out-message" role="status">
+              <span>You’ve been signed out.</span>
+              <button type="button" onClick={() => setShowSignedOutMessage(false)} aria-label="Dismiss sign-out message">
+                Dismiss
+              </button>
+            </div>
+          </div>
+        )}
         <section className="hero" id="home">
           <div className="container hero-layout">
             <div className="hero-copy">
@@ -381,14 +402,19 @@ function SectionHeading({ eyebrow, title, description, titleId }) {
 }
 
 function App() {
-  const isLoginPage = window.location.pathname.replace(/\/+$/, '') === '/login'
+  const currentPath = window.location.pathname.replace(/\/+$/, '') || '/'
+  const isLoginPage = currentPath === '/login'
+  const isDashboardPage = currentPath === '/dashboard'
 
   useEffect(() => {
     document.title = isLoginPage
       ? 'Account Access | ClearanceDNSC'
+      : isDashboardPage
+        ? 'Student Dashboard | ClearanceDNSC'
       : 'ClearanceDNSC | Student Clearance, Simplified'
-  }, [isLoginPage])
+  }, [isDashboardPage, isLoginPage])
 
+  if (isDashboardPage) return <StudentDashboard />
   return isLoginPage ? <LoginPage /> : <HomePage />
 }
 

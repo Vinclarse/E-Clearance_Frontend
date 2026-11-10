@@ -190,6 +190,29 @@ button:focus-visible {
   background: var(--cream);
 }
 
+.signed-out-message {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 1rem 0 0;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background: var(--green-100);
+  color: var(--green-950);
+  font-weight: 600;
+}
+
+.signed-out-message button {
+  padding: 0.25rem 0.5rem;
+  border: 0;
+  background: transparent;
+  color: var(--green-700);
+  font: inherit;
+  cursor: pointer;
+}
+
 .hero-layout {
   display: grid;
   align-items: center;
